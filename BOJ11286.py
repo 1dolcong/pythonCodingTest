@@ -7,6 +7,7 @@ for i in range(num):
     inputList.append(temp)
     if not temp == 0:
         heapq.heappush(pq, (abs(temp),temp))
+        print(pq)
     else:
         if len(pq) > 0:
             print(heapq.heappop(pq)[1])
