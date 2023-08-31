@@ -1,5 +1,4 @@
 import sys
-
 input = sys.stdin.readline
 N, L = tuple(map(int,input().split()))
 leak_point = list(map(int,input().split()))
