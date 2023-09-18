@@ -9,6 +9,7 @@ for i in range(N):
     else:
         book_dic[title] += 1
 book_dic_title = sorted(book_dic, reverse=True)
+print(book_dic_title)
 most_book = book_dic_title[0]
 for i in range(1,len(book_dic_title)):
     if book_dic[book_dic_title[i]] >= book_dic[most_book]:
