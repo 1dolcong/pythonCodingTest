@@ -1,52 +1,56 @@
-import copy
+import sys
 
+input = sys.stdin.readline
 N = int(input())
-board = []
-def check(board):
-    best = 1
-    for i in range(len(board)):
-        present = 1
-        for j in range(1,len(board)):
-            if board[i][j-1] == board[i][j]:
-                present += 1
-                if best < present:
-                    best = present
-            else:
-                present = 1
-    for i in range(len(board)):
-        present = 1
-        for j in range(1, len(board)):
-            if board[j-1][i] == board[j][i]:
-                present += 1
-                if best < present:
-                    best = present
-            else:
-                present = 1
-    return best
+board = [ list(input().rstrip()) for _ in range(N)]
+result = 1
 
-for i in range(N):
-    board.append(list(input()))
+def up_down_check(board, j):
+    global result
+    cnt = 1
+    pre = board[0][j]
+    for i in range(1, N):
+        if pre == board[i][j]:
+            cnt += 1
+            if cnt > result:
+                result = cnt
+        else:
+            cnt = 1
+        pre = board[i][j]
 
-max_val = 1
+def left_right_check(board, i):
+    global result
+    cnt = 1
+    pre = board[i][0]
+    for j in range(1,N):
+        if pre == board[i][j]:
+            cnt += 1
+            if cnt > result:
+                result = cnt
+        else:
+            cnt = 1
+        pre = board[i][j]
 
-max_val = 1
+def left_right_rotate(board):
+    for i in range(N):
+        for j in range(N-1):
+            board[i][j], board[i][j+1] = board[i][j+1], board[i][j]
+            left_right_check(board, i)
+            up_down_check(board, j)
+            up_down_check(board, j+1)
+            board[i][j], board[i][j + 1] = board[i][j + 1], board[i][j]
 
-for i in range(N):
+
+def up_down_rotate(board):
     for j in range(N):
-        if j + 1 < N:
-            # Swap elements horizontally
-            board_temp = copy.deepcopy(board)
-            board_temp[i][j], board_temp[i][j + 1] = board_temp[i][j + 1], board_temp[i][j]
-            find = check(board_temp)
-            if max_val < find:
-                max_val = find
+        for i in range(N-1):
+            board[i][j], board[i+1][j] = board[i+1][j], board[i][j]
+            up_down_check(board, j)
+            left_right_check(board, i)
+            left_right_check(board, i+1)
+            board[i][j], board[i+1][j] = board[i+1][j], board[i][j]
 
-        if i + 1 < N:
-            # Swap elements vertically
-            board_temp = copy.deepcopy(board)
-            board_temp[i][j], board_temp[i + 1][j] = board_temp[i + 1][j], board_temp[i][j]
-            find = check(board_temp)
-            if max_val < find:
-                max_val = find
 
-print(max_val)
+left_right_rotate(board)
+up_down_rotate(board)
+print(result)
